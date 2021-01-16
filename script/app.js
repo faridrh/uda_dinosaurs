@@ -66,49 +66,80 @@ document.getElementById('btn').addEventListener('click', function(){
 
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
-Dino.comp1= function (weight1, weight2){
+Dino.comp1= function (){
     weight1 = this.weight;
     weight2 = Human1.weight;
     if (weight1 > weight2) {
-        console.log(this.species + ' is heavier than '+ Human1.name1)
+        compfact = this.species + ' is heavier than '+ Human1.name1;
     } 
     else {
-        console.log(this.species + ' is not heavier '+  Human1.name1)
-    };
+        compfact = this.species + ' is not heavier than '+  Human1.name1 ;
+    }
+    return compfact;
 }
 
     
     // Create Dino Compare Method 2
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    Dino.comp2 = function (height1, height2){
+    Dino.comp2 = function (){
         height1 = this.height;
         height2 = Human1.height;
         if (height1 > height2) {
-            console.log(this.species + ' is taller than '+  Human1.name1)
+            compfact = this.species + ' is taller than '+  Human1.name1;
         } 
         else {
-            console.log(this.species + ' is shorter than '+  Human1.name1)
-        };
+            compfact = this.species + ' is shorter than '+  Human1.name1
+        }
+        return compfact;
     }
     
     // Create Dino Compare Method 3
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    Dino.comp3 = function (diet1, diet2){
+    Dino.comp3 = function (){
         diet1 = this.diet;
         diet2 = Human1.diet;
         if (diet1.toUpperCase() == diet2.toUpperCase()) {
-            console.log(this.species + ' has a same diet with '+  Human1.name1)
-        } 
+            compfact = this.species + ' has a same diet with '+  Human1.name1;
+        }
         else {
-            console.log(this.species + ' has a different diet from '+ Human1.name1)
+            compfact = this.species + ' has a different diet with '+  Human1.name1;
         };
+        return compfact;
     }
 
     // Generate Tiles for each Dino in Array
+    function generateTile (){
+    let tile=[];
+  s= [Dino1, Dino2, Dino3, Dino4, Dino5, Dino6, Dino7,Dino8]
+  //Generates 3 random Int
+  function getRandomInt(min, max,num) {
+    s=[0,0,0];
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    while (s[0]==s[1]& s[0]==s[2] &s[1]==s[2]){
+    for (let index = 0; index < num; index++) {
+        s[index] = Math.floor(Math.random() * (max - min) + min);;
+
+    }
+}
+    return s ;
+  }
+  r= getRandomInt(0, s.length-1,6)// due to Piegeon always gets the same fact
+
+  //fact should be random from the above, first save it to variable and then
+  randomfact= 0;
   
+for (i=0; i<s.length; i++){
+   tile[i]= "<img src="+ "\"images/"+s[i].species+ ".png\"" + " alt="+ s[i].species+ "\"" +">"+ "</img>"+ "<p>"+ s[i].fact +"</p>" +"<h3>"+ s[i].species +"</h3>";
+}
         // Add tiles to DOM
-
-    // Remove form from screen
-
+for (let index = 0; index <tile.length; index++) {
+    document.getElementById("Dino" +(index+1).toString()).innerHTML=tile[index]   
+        }
+  document.getElementById("Human").innerHTML = "<img src="+ "\"images/human.png\"" + " alt="+ "\"Human\"" +">"+ "</img>" + "<h3>"+ Human1.name1 +"</h3>" ;
+  // Remove form from screen
+  document.getElementById("dino-compare").hidden = true;
+    }
 
 // On button click, prepare and display infographic
+document.getElementById("btn").addEventListener("click",generateTile)
