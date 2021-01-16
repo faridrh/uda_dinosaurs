@@ -21,6 +21,8 @@ Dino5= fs.Dinos[4];
 Dino6= fs.Dinos[5];
 Dino7= fs.Dinos[6];
 Dino8= fs.Dinos[7];
+
+//Set prototype to Dino
 Object.setPrototypeOf(Dino1,Dino)
 Object.setPrototypeOf(Dino2,Dino)
 Object.setPrototypeOf(Dino3,Dino)
