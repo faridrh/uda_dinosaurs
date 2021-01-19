@@ -32,9 +32,6 @@ Object.setPrototypeOf(Dino6,Dino)
 Object.setPrototypeOf(Dino7,Dino)
 Object.setPrototypeOf(Dino8,Dino)
 
-
-//Dino2.__proto__ = Dino ;
-
 function func1(){
     return console.log(fs.Dinos[0]);
 }
@@ -62,7 +59,6 @@ document.getElementById('btn').addEventListener('click', function(){
    Human1.height = height;
    Human1.diet = diet;
 });
-//console.log(Human1.height)
 
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
@@ -111,24 +107,46 @@ Dino.comp1= function (){
     function generateTile (){
     let tile=[];
   s= [Dino1, Dino2, Dino3, Dino4, Dino5, Dino6, Dino7,Dino8]
-  //Generates 3 random Int
+
+  //Generates random integer numbers function, to get random num
   function getRandomInt(min, max,num) {
-    s=[0,0,0];
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    while (s[0]==s[1]& s[0]==s[2] &s[1]==s[2]){
-    for (let index = 0; index < num; index++) {
-        s[index] = Math.floor(Math.random() * (max - min) + min);;
-
+    let arr=[];
+    while  (arr.length<num){
+        var r = Math.floor(Math.random()*max)+min;
+        if(arr.indexOf(r) === -1) {
+            arr.push(r);
+        }}
+    return arr ;
     }
-}
-    return s ;
-  }
-  r= getRandomInt(0, s.length-1,6)// due to Piegeon always gets the same fact
+      
+    // due to Piegeon always gets the same fact, the length of array 1 less as pigeon last element in json file
+     r= getRandomInt(0, s.length-1,3)
 
-  //fact should be random from the above, first save it to variable and then
-  randomfact= 0;
-  
+  function shuffle(array) {
+    let counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}
+
+// here we are replacing facts from json from the compare function
+s[r[0]].fact=s[r[0]].comp1();
+s[r[1]].fact=s[r[1]].comp2();
+s[r[2]].fact=s[r[2]].comp3();
+s= shuffle(s) // to get random tiles 
 for (i=0; i<s.length; i++){
    tile[i]= "<img src="+ "\"images/"+s[i].species+ ".png\"" + " alt="+ s[i].species+ "\"" +">"+ "</img>"+ "<p>"+ s[i].fact +"</p>" +"<h3>"+ s[i].species +"</h3>";
 }
@@ -136,10 +154,11 @@ for (i=0; i<s.length; i++){
 for (let index = 0; index <tile.length; index++) {
     document.getElementById("Dino" +(index+1).toString()).innerHTML=tile[index]   
         }
+    
   document.getElementById("Human").innerHTML = "<img src="+ "\"images/human.png\"" + " alt="+ "\"Human\"" +">"+ "</img>" + "<h3>"+ Human1.name1 +"</h3>" ;
   // Remove form from screen
   document.getElementById("dino-compare").hidden = true;
     }
-
+    
 // On button click, prepare and display infographic
 document.getElementById("btn").addEventListener("click",generateTile)
