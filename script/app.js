@@ -9,41 +9,29 @@ function Dino(species, weight, height, diet, where, when, fact) {
     this.fact = fact;
 }
 // Create Dino Objects
-const fs = require('./dino.json')
-let dinos = [];
-fs.Dinos.forEach((dino, index) => {
-    dinos[index] = dino;
-    Object.setPrototypeOf(dinos[index], Dino);
-})
-/* Dino1 = fs.Dinos[0]
-Dino2= fs.Dinos[1];
-Dino3= fs.Dinos[2];
-Dino4= fs.Dinos[3];
-Dino5= fs.Dinos[4]; 
-Dino6= fs.Dinos[5];
-Dino7= fs.Dinos[6];
-Dino8= fs.Dinos[7]; */
 
-//Set prototype to Dino
-/* Object.setPrototypeOf(Dino1,Dino)
-Object.setPrototypeOf(Dino2,Dino)
-Object.setPrototypeOf(Dino3,Dino)
-Object.setPrototypeOf(Dino4,Dino)
-Object.setPrototypeOf(Dino5,Dino)
-Object.setPrototypeOf(Dino6,Dino)
-Object.setPrototypeOf(Dino7,Dino)
-Object.setPrototypeOf(Dino8,Dino) */
-
-// Create Human Object
-function Human(name1, weight, height, diet) {
+// Create Human constructor 
+function Human(name1, weight, height, diet) { 
     this.name1 = name1;
     this.weight = weight;
     this.height = height;
     this.diet = diet;
 }
+// Create Human Instance
+let Human1 = Object.create(Human);
 
-Human1 = Object.create(Human);
 
+
+// define Go Back function
+document.getElementById('goBack').addEventListener('click',resetForm)
+
+function resetForm(){
+    document.getElementById('grid').style.display ='none'; // hide grids
+    document.getElementById('goBack').style.display ='none'; // hide goBack
+    document.getElementById('dino-compare').style.display = 'block';// show form
+    document.getElementById('dino-compare').reset(); //reset form
+    //console.log(dinos)
+}
 // Use IIFE to get human data from form and generate tiles
 document.getElementById('btn').addEventListener('click', function() {
     (function() {
@@ -60,6 +48,7 @@ document.getElementById('btn').addEventListener('click', function() {
     })();
     generateTile();
 });
+//document.getElementById('btn').addEventListener('click',generateTile);
 // Create Dino Compare Method comp1
 // NOTE: Weight in JSON file is in lbs, height in inches. 
 
@@ -107,6 +96,67 @@ Dino.comp3 = function() {
 // Generate Tiles for each Dino in Array
 function generateTile() {
     let tile = [];
+    let dinos = [];
+
+
+    //Create Dinos from json
+
+    let fs = require('./dino.json')
+    fs.Dinos.forEach((dino, index) => {
+   // dinos[index] = dino; does not work as this changes both fs.Dinos and dinos array when only dinos changes
+    dinos[index]= Object.assign({},dino)
+    Object.setPrototypeOf(dinos[index], Dino);
+    }) 
+    console.log(fs);
+    console.log(dinos);
+
+
+    let r = getRandomInt(0, dinos.length, 3) // get 3 random rnumbers and save to r
+        console.log(r)
+        r.forEach((item, index)=>{
+        if (dinos[item].species!= 'Pigeon'){
+        if (index === 0) {
+        dinos[item].fact= dinos[item].comp1();
+        }
+        if (index === 1){
+            dinos[item].fact= dinos[item].comp2();
+
+        }
+        if (index === 2){
+            dinos[item].fact= dinos[item].comp3();
+
+        }
+        }
+        })
+    
+
+
+    for (i = 0; i < dinos.length; i++) {
+        tile[i] = "<img src=" + "\"images/" + dinos[i].species + ".png\"" + " alt=" + dinos[i].species + "\"" + ">" + "</img>" + "<p>" + dinos[i].fact + "</p>" + "<h3>" + dinos[i].species + "</h3>";
+        }
+        // Add tiles to DOM
+            for (let index = 0; index < tile.length; index++) {
+            document.getElementById("Dino" + (index + 1).toString()).innerHTML = tile[index]
+        }
+    
+        document.getElementById("Human").innerHTML = "<img src=" + "\"images/human.png\"" + " alt=" + "\"Human\"" + ">" + "</img>" + "<h3>" + Human1.name1 + "</h3>";
+        // Remove form from screen
+        document.getElementById("dino-compare").style.display = 'none';
+        
+        
+     
+        //dinos[0].fact= dinos[0].comp1();
+    
+    
+    
+    shuffle(dinos) // to get random tiles 
+
+
+    console.log("I have benn called")
+    document.getElementById('goBack').style.display = 'inline-block'; // show goback button
+    document.getElementById('grid').style.display = 'flex'; // show grid
+
+  
 
     //Generates random integer numbers function, to get random num
     function getRandomInt(min, max, num) {
@@ -119,9 +169,6 @@ function generateTile() {
         }
         return arr;
     }
-
-    // due to Piegeon always gets the same fact, the length of array 1 less as pigeon last element in json file
-    r = getRandomInt(0, dinos.length - 1, 3)
 
     function shuffle(array) {
         let counter = array.length;
@@ -143,20 +190,8 @@ function generateTile() {
         return array;
     }
 
-    // here we are replacing facts from json from the compare function
-    dinos[r[0]].fact = dinos[r[0]].comp1();
-    dinos[r[1]].fact = dinos[r[1]].comp2();
-    dinos[r[2]].fact = dinos[r[2]].comp3();
-    dinos = shuffle(dinos) // to get random tiles 
-    for (i = 0; i < dinos.length; i++) {
-        tile[i] = "<img src=" + "\"images/" + dinos[i].species + ".png\"" + " alt=" + dinos[i].species + "\"" + ">" + "</img>" + "<p>" + dinos[i].fact + "</p>" + "<h3>" + dinos[i].species + "</h3>";
-    }
-    // Add tiles to DOM
-    for (let index = 0; index < tile.length; index++) {
-        document.getElementById("Dino" + (index + 1).toString()).innerHTML = tile[index]
-    }
+    // here we are replacing 3 facts from json to the compare function
+  
 
-    document.getElementById("Human").innerHTML = "<img src=" + "\"images/human.png\"" + " alt=" + "\"Human\"" + ">" + "</img>" + "<h3>" + Human1.name1 + "</h3>";
-    // Remove form from screen
-    document.getElementById("dino-compare").style.display = 'none';
-}
+    
+}   
